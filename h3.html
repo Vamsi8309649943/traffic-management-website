@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Management System</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        section {
+            padding: 20px;
+            margin: 20px 0;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script>
+    // Create and append elements dynamically
+    // Header
+    const header = document.createElement("header");
+    const h1 = document.createElement("h1");
+    h1.textContent = "Traffic Management System";
+    header.appendChild(h1);
+
+    const nav = document.createElement("nav");
+    const ul = document.createElement("ul");
+    ["Dashboard", "Routes", "Alerts", "Contact"].forEach(text => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = `#${text.toLowerCase()}`;
+        a.textContent = text;
+        li.appendChild(a);
+        ul.appendChild(li);
+    });
+    nav.appendChild(ul);
+    header.appendChild(nav);
+    document.body.appendChild(header);
+
+    // Section: Dashboard
+    const dashboard = document.createElement("section");
+    dashboard.id = "dashboard";
+
+    const h2Dashboard = document.createElement("h2");
+    h2Dashboard.textContent = "Traffic Dashboard";
+    h2Dashboard.style.color = "#4CAF50";
+    dashboard.appendChild(h2Dashboard);
+
+    const pDashboard = document.createElement("p");
+    pDashboard.textContent = "Real-time traffic updates and alerts.";
+    dashboard.appendChild(pDashboard);
+
+    // Create a div for the map
+    const mapDiv = document.createElement("div");
+    mapDiv.id = "map";
+    dashboard.appendChild(mapDiv);
+
+    document.body.appendChild(dashboard);
+
+    // Initialize the map
+    const map = L.map('map').setView([20, 0], 2); // Centered at [latitude, longitude] with a zoom level of 2
+
+    // Add a tile layer to the map (this is the map itself)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Section: Routes
+    const routes = document.createElement("section");
+    routes.id = "routes";
+
+    const h2Routes = document.createElement("h2");
+    h2Routes.textContent = "Plan Your Route";
+    h2Routes.style.color = "#4CAF50";
+    routes.appendChild(h2Routes);
+
+    const form = document.createElement("form");
+    form.id = "routeForm";
+
+    const labelStart = document.createElement("label");
+    labelStart.htmlFor = "start";
+    labelStart.textContent = "Start:";
+    form.appendChild(labelStart);
+
+    const inputStart = document.createElement("input");
+    inputStart.type = "text";
+    inputStart.id = "start";
+    inputStart.name = "start";
+    inputStart.placeholder = "Enter starting location";
+    form.appendChild(inputStart);
+
+    const labelDestination = document.createElement("label");
+    labelDestination.htmlFor = "destination";
+    labelDestination.textContent = "Destination:";
+    form.appendChild(labelDestination);
+
+    const inputDestination = document.createElement("input");
+    inputDestination.type = "text";
+    inputDestination.id = "destination";
+    inputDestination.name = "destination";
+    inputDestination.placeholder = "Enter destination";
+    form.appendChild(inputDestination);
+
+    const button = document.createElement("button");
+    button.type = "submit";
+    button.textContent = "Find Route";
+    form.appendChild(button);
+
+    routes.appendChild(form);
+
+    const routeResult = document.createElement("div");
+    routeResult.id = "routeResult";
+    routes.appendChild(routeResult);
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const start = inputStart.value;
+        const destination = inputDestination.value;
+
+        if (start && destination) {
+            routeResult.textContent = `Finding the best route from ${start} to ${destination}...`;
+        } else {
+            routeResult.textContent = 'Please enter both start and destination locations.';
+        }
+    });
+
+    document.body.appendChild(routes);
+
+    // Section: Alerts
+    const alerts = document.createElement("section");
+    alerts.id = "alerts";
+
+    const h2Alerts = document.createElement("h2");
+    h2Alerts.textContent = "Traffic Alerts";
+    h2Alerts.style.color = "#4CAF50";
+    alerts.appendChild(h2Alerts);
+
+    const ulAlerts = document.createElement("ul");
+
+    ["Road closure on XYZ street until 6 PM.", "Heavy traffic on ABC avenue due to an accident."].forEach(alertText => {
+        const liAlert = document.createElement("li");
+        liAlert.textContent = alertText;
+        ulAlerts.appendChild(liAlert);
+    });
+    alerts.appendChild(ulAlerts);
+
+    document.body.appendChild(alerts);
+
+    // Footer
+    const footer = document.createElement("footer");
+    footer.id = "contact";
+
+    const pContact = document.createElement("p");
+    pContact.textContent = "Contact us at traffic@management.com";
+    footer.appendChild(pContact);
+
+    const pCopyright = document.createElement("p");
+    pCopyright.textContent = "© 2024 Traffic Management";
+    footer.appendChild(pCopyright);
+
+    document.body.appendChild(footer);
+</script>
+
+</body>
+</html>
